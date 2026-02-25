@@ -2,6 +2,7 @@ import "dotenv/config";
 import express, { Router } from "express";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import appRouter from "./routes/appRouter.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,9 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 // test route
-app.get("/", (req, res) => {
-  res.send("Welcome to Sense Coffee.")
-});
+app.use("/", appRouter)
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
