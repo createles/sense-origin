@@ -1,4 +1,4 @@
-<%- include('partials/header.ejs', { title: Sense Coffee - Catalog }) %>
+<%- include('partials/header.ejs', { title: "Sense Coffee - Catalog" }) %>
 
   <div class="catalog-layout">
 
@@ -8,11 +8,11 @@
 
         <fieldset>
           <legend>By Origin:</legend>
-            <% origins.forEach(origin) { %>
+            <% origins.forEach(origin => { %>
               <label for="">
                 <input type="radio" name="origin" value="<%= origin.id %>"> <%= origin.name %>
               </label><br>
-            <% } %>
+            <% }) %>
         </fieldset>
 
         <button type="submit">Apply Filters</button>
