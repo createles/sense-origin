@@ -8,15 +8,11 @@
 
         <fieldset>
           <legend>By Origin:</legend>
-          <label for="">
-            <input type="radio" name="origin" value="1"> Ethiopia
-          </label><br>
-          <label for="">
-            <input type="radio" name="origin" value="2"> Colombia
-          </label><br>
-          <label for="">
-            <input type="radio" name="origin" value="all" checked> All Origins 
-          </label>
+            <% origins.forEach(origin) { %>
+              <label for="">
+                <input type="radio" name="origin" value="<%= origin.id %>"> <%= origin.name %>
+              </label><br>
+            <% } %>
         </fieldset>
 
         <button type="submit">Apply Filters</button>
