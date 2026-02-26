@@ -3,8 +3,12 @@ import { Router } from "express";
 const appRouter = Router();
 
 appRouter.get("/", (req, res) => {
-  res.send("Welcome to Sense Coffee.")
+  res.render("index");
 });
+
+appRouter.get("/catalog", (req, res) => {
+  res.render("coffee-list", { coffees: [] });
+})
 
 appRouter.get("/origin/:categoryName", (req, res) => {
   // temp basic use of route parameters and res.send
