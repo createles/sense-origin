@@ -1,0 +1,47 @@
+<%- include('partials/header.ejs', { title: Sense Coffee - Catalog }) %>
+
+  <div class="catalog-layout">
+
+    <aside class="filter-sidebar">
+      <h3> Filter Coffees </h3>
+      <form action="/catalog" method="GET">
+
+        <fieldset>
+          <legend>By Origin:</legend>
+          <label for="">
+            <input type="radio" name="origin" value="1"> Ethiopia
+          </label><br>
+          <label for="">
+            <input type="radio" name="origin" value="2"> Colombia
+          </label><br>
+          <label for="">
+            <input type="radio" name="origin" value="all" checked> All Origins 
+          </label>
+        </fieldset>
+
+        <button type="submit">Apply Filters</button>
+      </form>
+    </aside>
+
+    <main class="coffee-results">
+      <h2>Available Coffees</h2>
+
+      <div class="coffee-grid">
+        <% if (coffees.length > 0) { %>
+          <% coffees.forEach(coffee => { %>
+            <div class="coffee-card">
+              <h4><%= coffee.name %></h4>
+              <p><strong>Price:</strong> $<%= coffee.price %></p>
+              <p><strong>Stock:</strong> $<%= coffee.stock %></p>
+              <a href="/coffee/<%= coffee.id %>">View Details</a>
+            </div>
+          <% }) %>
+
+        <% } else { %>
+          <p> No coffees found matching those filters.</p>
+        <% } %>
+      </div>
+    </main>
+  </div>
+
+<%- include('partials/footer.ejs') %>
