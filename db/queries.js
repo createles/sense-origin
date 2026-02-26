@@ -1,7 +1,7 @@
 import pool from './pool.js';
 
 // READ operations
-export async function getAllOrigns() {
+export async function getAllOrigins() {
   const { rows } = await pool.query('SELECT * FROM origins ORDER BY name ASC');
   return rows;
 }
@@ -32,7 +32,11 @@ export async function getCoffeesByOrigin(originId) {
 }
 
 export async function getCoffeeById(id) {
-  const query = `SELECT * FROM coffees WHERE id = $1`
+  const query = `
+    SELECT coffees.*, origins.name AS origin_name
+    FROM coffees
+    JOIN origins ON coffees.origin_id = origins.id
+    WHERE id = $1`
   const { rows } = await pool.query(query, [id])
   // return ONLY a single row instead of an array
   // with only 1 element
