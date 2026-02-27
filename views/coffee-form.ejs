@@ -1,0 +1,38 @@
+<%- include("partials/header.ejs", { title: 'Add New Coffee Item' }) %>
+
+  <div class="coffee-form-container">
+    <form action="/coffee-form" method="post">
+      <label>
+        Name:
+        <input type="text" name="name" required>
+      </label>
+      <label>
+        <select name="originId" required>
+          <% origins.forEach(origin=> { %>
+            <option value="<%= origin.id %>">
+              <%= origin.name %>
+            </option>
+            <% }) %>
+        </select>
+      </label>
+      <label>
+        Location:
+        <input type="text" name="location">
+      </label>
+      <label>
+        Price:
+        <input type="number" name="price" step="0.01" required>
+      </label>
+      <label>
+        Stock:
+        <input type="number" name="stock" step="1">
+      </label>
+      <label>
+        Description:
+        <textarea name="description"></textarea>       
+      </label>
+      <button type="submit"> Add new item </button>
+    </form>
+  </div>
+
+<%- include("partials/footer.ejs") %>
