@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getCatalog } from "../controllers/coffeeController.js";
+import { getCatalog, getNewCoffeeForm, postNewCoffee } from "../controllers/coffeeController.js";
 
 const appRouter = Router();
 
@@ -8,6 +8,9 @@ appRouter.get("/", (req, res) => {
 });
 
 appRouter.get("/catalog", getCatalog);
+
+appRouter.get("/coffee-form", getNewCoffeeForm);
+appRouter.post("/coffee-form", postNewCoffee);
 
 appRouter.get("/origin/:categoryName", (req, res) => {
   // temp basic use of route parameters and res.send
