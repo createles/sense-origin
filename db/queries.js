@@ -36,7 +36,7 @@ export async function getCoffeeById(id) {
     SELECT coffees.*, origins.name AS origin_name
     FROM coffees
     JOIN origins ON coffees.origin_id = origins.id
-    WHERE id = $1`
+    WHERE coffees.id = $1`
   const { rows } = await pool.query(query, [id])
   // return ONLY a single row instead of an array
   // with only 1 element
@@ -54,8 +54,10 @@ export async function insertOrigin(name, region, description) {
   const query = `
     INSERT INTO origins (name, region, description)
     VALUES ($1, $2, $3)
+    RETURNING id
   `;
-  await pool.query(query, [name, region, description]);
+  const { rows } = await pool.query(query, [name, region, description]);
+  return rows[0].id;
 }
 
 export async function insertCoffee(name, location, description, price, stock, originId) {
