@@ -1,38 +1,80 @@
-<%- include("partials/header.ejs", { title: 'Add New Coffee Item' }) %>
+<%- include("partials/header.ejs", { title: title }) %>
 
   <div class="coffee-form-container">
-    <form action="/coffee-form" method="post">
+    <form action="<%= coffee.id ? '/coffee/' + coffee.id + 'edit' : '/coffee-form' %>" method="post">
       <label>
         Name:
-        <input type="text" name="name" required>
+        <input type="text" name="name" value="<%= coffee.name || '' %>" required>
       </label>
       <label>
-        <select name="originId" required>
+        Origin:
+        <select name="originId" id="selected-origin" required>
           <% origins.forEach(origin=> { %>
-            <option value="<%= origin.id %>">
+            <option value="<%= origin.id %>" <%= coffee.origin_id === origin.id ? 'selected' : '' %>>
               <%= origin.name %>
             </option>
             <% }) %>
+              <option value="new">-- Add new origin --</option>
         </select>
       </label>
+
+<!-- Fieldset for creating new origin -->
+      <fieldset class="new-origin-input">
+        <label>
+          Origin name:
+          <input type="text" name="newOriginName">
+        </label>
+        <label>
+          Region:
+          <select name="newOriginRegion">
+            <option value="Latin America">Latin America</option>
+            <option value="Africa">Africa</option>
+            <option value="Asia and the Pacific">Asia and the Pacific</option>
+          </select>
+        </label>
+        <label>
+          Description:
+          <textarea name="newOriginDescription" placeholder="Short description of this origin's profile..."></textarea>
+        </label>
+      </fieldset>
+<!-- ** -->
+
       <label>
         Location:
-        <input type="text" name="location">
+        <input type="text" name="location" value="<%= coffee.location || '' %>">
       </label>
       <label>
         Price:
-        <input type="number" name="price" step="0.01" required>
+        <input type="number" name="price" step="0.01" value="<%= coffee.price || '' %>" required>
       </label>
       <label>
         Stock:
-        <input type="number" name="stock" step="1">
+        <input type="number" name="stock" step="1" value="<%= coffee.stock || '' %>">
       </label>
       <label>
         Description:
-        <textarea name="description"></textarea>       
+        <textarea name="description"><%= coffee.description || '' %></textarea>       
       </label>
-      <button type="submit"> Add new item </button>
+      <button type="submit"> <%= coffee.id ? 'Update Item' : 'Add New Item' %></button>
     </form>
   </div>
 
+<script>
+  const originId = document.querySelector("#selected-origin");
+  const newOriginInput = document.querySelector(".new-origin-input");
+  const newOriginName = document.querySelector("input[name='newOriginName']");
+  const newOriginRegion = document.querySelector("select[name='newOriginRegion']");
+
+  originId.addEventListener("change", () => {
+    if (originId.value === "new") {
+      newOriginInput.classList.add("unhide");
+      newOriginName.required = true;
+      newOriginRegion.required = true;
+    } else {
+      newOriginInput.classList.remove("unhide");
+      newOriginName.required = false;
+      newOriginRegion.required = false;
+    }
+  })
+</script>
 <%- include("partials/footer.ejs") %>
