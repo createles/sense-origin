@@ -7,19 +7,15 @@ appRouter.get("/", (req, res) => {
   res.render("index");
 });
 
+// View coffee catalog
 appRouter.get("/catalog", getCatalog);
 
+// Create new coffee item routes
 appRouter.get("/coffee-form", getNewCoffeeForm);
 appRouter.post("/coffee-form", postNewCoffee);
 
+// Edit coffee item routes
 appRouter.get("/coffee/:id/edit", getEditCoffeeForm);
 appRouter.post("/coffee/:id/edit", postEditCoffee);
-
-appRouter.get("/origin/:categoryName", (req, res) => {
-  // temp basic use of route parameters and res.send
-  const categoryName = req.params.categoryName;
-
-  res.send(`Viewing ${categoryName} Coffees:`);
-});
 
 export default appRouter;
