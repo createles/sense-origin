@@ -1,0 +1,16 @@
+<%- include("partials/header.ejs"), { title: title } %>
+
+  <div class="coffee-details">
+    <p class="coffee-name"><%= coffee.name %></p>
+    <p class="origin-name"><%= coffee.origin_name %></p>
+    <p class="location"><%= coffee.location %></p>
+    <p class="description"><%= coffee.description %></p>
+    <h4 class="coffee-price"><%= coffee.price %></h4>
+    <h5 class="coffee-stock"><%= coffee.stock %></h4>
+  </div>
+
+  <form action="/coffee/<%= coffee.id %>/delete" method="POST" onsubmit="return confirm('Are you sure you want to delete this coffee?');">
+    <button type="submit">Delete Coffee</button>
+  </form>
+
+<%- include("partials/footer.ejs") %>

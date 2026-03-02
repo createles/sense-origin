@@ -195,3 +195,17 @@ export async function postEditCoffee(req, res) {
     res.status(500).send("Internal Server Error");
   }
 }
+
+// Delete coffee item
+export async function postDeleteCoffee(req, res) {
+  try {
+  const coffeeId = req.params.id;
+
+  await db.deleteCoffee(coffeeId);
+
+  res.redirect('/catalog')
+  } catch (error) {
+    console.error("Failure to delete coffee item", error);
+    res.status(500).send("Internal Server Error");
+  }
+}

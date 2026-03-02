@@ -92,5 +92,5 @@ export async function deleteOrigin(id) {
 }
 
 export async function deleteCoffee(id) {
-  await pool.query(`DELETE FROM cofees WHERE id = $1`, [id]);
+  await pool.query(`DELETE FROM coffees WHERE id = $1`, [id]);
 }
