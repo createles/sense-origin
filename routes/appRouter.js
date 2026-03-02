@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getCatalog, getCoffeeDetails, getEditCoffeeForm, getNewCoffeeForm, postDeleteCoffee, postEditCoffee, postNewCoffee } from "../controllers/coffeeController.js";
+import { getCatalog, getCoffeeDetails, getEditCoffeeForm, getNewCoffeeForm, postDeleteCoffee, postDeleteOrigin, postEditCoffee, postNewCoffee } from "../controllers/coffeeController.js";
 
 const appRouter = Router();
 
@@ -23,5 +23,8 @@ appRouter.post("/coffee/:id/edit", postEditCoffee);
 
 // Delete coffee item route
 appRouter.post("/coffee/:id/delete", postDeleteCoffee);
+
+// Delete origin route
+appRouter.post("/origin/:id/delete", postDeleteOrigin);
 
 export default appRouter;

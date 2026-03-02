@@ -5,6 +5,11 @@ import * as db from "../db/queries.js";
 // render coffee-list catalog page
 export async function getCatalog(req, res) {
   try {
+    
+    // check for operation status messages
+    const errorMsg = req.query.error;
+    const successMsg = req.query.success;
+
     // check for any filters applied to GET form
     const filterId = req.query.origin;
 
@@ -24,7 +29,9 @@ export async function getCatalog(req, res) {
 
     res.render("coffee-list", {
       origins: origins, 
-      coffees: coffees
+      coffees: coffees,
+      error: errorMsg,
+      success: successMsg
     });
   } catch (error) {
     console.error("Error fetching catalog:", error);
@@ -206,6 +213,31 @@ export async function postDeleteCoffee(req, res) {
   res.redirect('/catalog')
   } catch (error) {
     console.error("Failure to delete coffee item", error);
+    res.status(500).send("Internal Server Error");
+  }
+}
+
+// Delete coffee origin
+export async function postDeleteOrigin(req, res) {
+  try {
+    const originId = req.params.id;
+    const coffees = await db.getCoffeesByOrigin(originId);
+  
+    if (coffees.length > 0) {
+      // ensures URL doesnt break due to spaces and special characters
+      const msg = encodeURIComponent("Cannot delete an origin with coffees still attached.");
+      return res.redirect(`/catalog?error=${msg}`);
+    }
+    
+    const origin = await db.getOriginById(originId);
+    const originName = origin.name;
+    await db.deleteOrigin(originId);
+
+    const msg = encodeURIComponent(`${originName} origin category removed from inventory.`);
+    res.redirect(`/catalog?success=${msg}`);
+
+  } catch (error) {
+    console.error("Failure to delete origin.", error);
     res.status(500).send("Internal Server Error");
   }
 }
