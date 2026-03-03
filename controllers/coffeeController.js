@@ -241,3 +241,22 @@ export async function postDeleteOrigin(req, res) {
     res.status(500).send("Internal Server Error");
   }
 }
+
+// -- ADMIN DASHBOARD PAGE -- 
+
+// Load management dashboard
+export async function getManagementDashboard(req, res) {
+  try {
+    const origins = await db.getAllOrigins();
+    const coffees = await db.getAllCoffees();
+
+    res.render("manage", {
+      origins: origins, 
+      coffees: coffees, 
+      title: "Inventory Management Dashboard"
+    });
+  } catch (error) {
+    console.error("Access to admin dashboard aborted.", error);
+    res.status(500).send("Internal Server Error");
+  }
+}

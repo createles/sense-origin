@@ -5,3 +5,12 @@
 .unhide {
   display: block;
 }
+
+.hidden {
+  display: none;
+}
+
+.action-cell {
+  display: flex;
+  gap: 10px;
+}
