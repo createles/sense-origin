@@ -1,12 +1,27 @@
 <%- include("partials/header.ejs", { title: title }) %>
 
+<% if (successMsg) { %>
+  <div class="alert success-alert">
+    <%= successMsg %>
+  </div>
+<% } %>
+
+<% if (errorMsg) { %>
+  <div class="alert error-alert">
+    <%= errorMsg %>
+  </div>
+<% } %>
+
 <div class="table-toggles">
   <button type="button" id="btn-show-origins" class="active">Manage Origins</button>
   <button type="button" id="btn-show-coffees">Manage Coffees</button>
 </div>
 
 <div id="origins-table">
-  <h3>Origins</h3>
+  <div class="section-header">
+    <h3>Origins</h3>
+    <button id="add-origin-btn" class="btn btn-primary">Add New Origin</button>
+  </div>
   <table class="inventory-table">
     <tr>
       <th>ID</th>
@@ -41,7 +56,10 @@
 </div>
 
 <div id="coffees-table" class="hidden">
-  <h3>Coffee Inventory</h3>
+  <div class="section-header">
+    <h3>Coffee Inventory</h3>
+    <button id="add-coffee-btn" class="btn btn-primary">Add New Coffee</button>
+  </div>
   <table class="inventory-table">
     <tr>
       <th>ID</th>
@@ -63,7 +81,18 @@
         <td><%= coffee.price %></td>
         <td><%= coffee.stock %></td>
         <td class="action-cell">
-          <a href="/coffee/<%= coffee.id %>/edit" class="edit-btn">Edit</a>
+          <button 
+          type="button"
+          class="edit-coffee-btn" 
+          data-id="<%= coffee.id %>" 
+          data-name="<%= coffee.name %>"
+          data-origin-id="<%= coffee.origin_id %>"
+          data-location="<%= coffee.location %>"
+          data-description="<%= coffee.description %>"
+          data-price="<%= coffee.price %>"
+          data-stock="<%= coffee.stock %>">
+            Edit
+          </button>
           <form action="/coffee/<%= coffee.id %>/delete" method="POST" class="delete-form" onsubmit="return confirm('Are you sure you want to delete this coffee item?');">
             <button type="submit" class="delete-btn">Delete</button>
           </form>
@@ -73,31 +102,96 @@
   </table>
 </div>
 
-<div class="edit-modal hidden">
-  <form id="edit-origin-form" method="post">
-    <input type="text" id="modal-origin-name">
-    <input type="text" id="modal-origin-region">
-    <input type="text" id="modal-origin-desc"> 
+<!-- Origin Modal -->
+<div class="origin-modal hidden">
+  <form id="origin-form" method="post">
+    <input type="text" id="modal-origin-name" name="name">
+    <input type="text" id="modal-origin-region" name="region">
+    <textarea id="modal-origin-desc" name="desc"></textarea>
+    <button type="button" id="close-origin-modal-btn">Cancel</button>
+    <button type="submit">Update</button>
+  </form>
+</div>
+
+<!-- Coffee Modal -->
+<div class="coffee-modal hidden">
+  <form id="coffee-form" method="post">
+    <label>
+      Name:
+      <input type="text" id="modal-coffee-name" name="name">
+    </label>
+    <label>
+      Region:
+      <select name="originId" id="modal-selected-origin" required>
+        <% origins.forEach(origin=> { %>
+          <option value="<%= origin.id %>">
+            <%= origin.name %>
+          </option>
+          <% }) %>
+      </select>
+    </label>
+    <label>
+      Location:
+      <input type="text" id="modal-coffee-location" name="location">
+    </label>
+    <label>
+      Description:
+      <textarea name="desc" id="modal-coffee-desc"></textarea>
+    </label>
+    <label>
+      Price:
+      <input type="number" name="price" id="modal-coffee-price" step="0.01" required>
+    </label>
+    <label>
+      Stock:
+      <input type="number" name="stock" id="modal-coffee-stock">
+    </label>
+    <button type="button" id="close-coffee-modal-btn">Cancel</button>
+    <button type="submit">Update</button>
   </form>
 </div>
 
 <script>
-  const originToggle = document.querySelector("#btn-show-origins");
+  // Select toggles
+  const originsToggle = document.querySelector("#btn-show-origins");
   const coffeesToggle = document.querySelector("#btn-show-coffees");
+  
+  // Select tables
   const originsTable = document.querySelector("#origins-table");
   const coffeesTable = document.querySelector("#coffees-table");
 
+  // Select modals
+  const originModal = document.querySelector(".origin-modal");
+  const coffeeModal = document.querySelector(".coffee-modal");
+
+  // Select add/edit btns
+  const addOriginBtn = document.querySelector("#add-origin-btn");
+  const addCoffeeBtn = document.querySelector("#add-coffee-btn");
   const editOriginBtns = document.querySelectorAll(".edit-origin-btn");
-  const editModal = document.querySelector(".edit-modal");
-  const editOriginForm = document.querySelector("#edit-origin-form"); 
+  const editCoffeeBtns = document.querySelectorAll(".edit-coffee-btn");
+  
+  // Select modal forms
+  const originForm = document.querySelector("#origin-form"); 
+  const coffeeForm = document.querySelector("#coffee-form");
+
+  // origin modal inputs
+  const originNameInput = document.querySelector("#modal-origin-name");
+  const originRegionSelect = document.querySelector("#modal-origin-region");
+  const originDescInput = document.querySelector("#modal-origin-desc");
+  const originCloseModalBtn = document.querySelector("#close-origin-modal-btn");
 
 
-  const nameInput = document.querySelector("#modal-origin-name");
-  const regionSelect = document.querySelector("#modal-origin-region");
-  const descInput = document.querySelector("#modal-origin-desc");
+  // coffee modal inputs
+  const coffeeNameInput = document.querySelector("#modal-coffee-name");
+  const coffeeOriginSelect = document.querySelector("#modal-selected-origin");
+  const coffeeLocationInput = document.querySelector("#modal-coffee-location");
+  const coffeeDescInput = document.querySelector("#modal-coffee-desc");
+  const coffeePriceInput = document.querySelector("#modal-coffee-price");
+  const coffeeStockInput = document.querySelector("#modal-coffee-stock");
+  const coffeeCloseModalBtn = document.querySelector("#close-coffee-modal-btn")
 
-  // TOGGLE BUTTON LISTENERS
-  originToggle.addEventListener("click", () => {
+  // SHOW TOGGLE BUTTON LISTENERS
+  originsToggle.addEventListener("click", () => {
     originsTable.classList.remove("hidden");
     coffeesTable.classList.add("hidden");
 
@@ -113,8 +207,71 @@
     originsToggle.classList.remove("active");
   });
 
+  // ADD BUTTON LISTENERS
+  addOriginBtn.addEventListener("click", () => {
+    originForm.reset();
+    originForm.action = "/origin/new";
+    originModal.classList.remove("hidden");
+  });
+
+  addCoffeeBtn.addEventListener("click", () => {
+    coffeeForm.reset();
+    coffeeForm.action = "/coffee/new";
+    coffeeModal.classList.remove("hidden");
+  });
+
   // EDIT BUTTON LISTENERS
-  // **CONT WRITING EVENT LISTENER FOR EDITING MODAL
+  editOriginBtns.forEach(button => {
+    button.addEventListener("click", () => {
+      // Take data-set from clicked button
+      const id = button.dataset.id;
+      const name = button.dataset.name;
+      const region = button.dataset.region;
+      const desc = button.dataset.description;
+
+      // set post route dynamically
+      originForm.action = `/origin/${id}/edit`;
+      originNameInput.value = name;
+      originRegionSelect.value = region;
+      originDescInput.value = desc;
+
+      // show modal
+      originModal.classList.remove("hidden");
+    });
+  });
+
+  editCoffeeBtns.forEach(button => {
+    button.addEventListener("click", () => {
+      const id = button.dataset.id;
+      const name = button.dataset.name;
+      const originId = button.dataset.originId;
+      const location = button.dataset.location;
+      const desc = button.dataset.description;
+      const price = button.dataset.price;
+      const stock = button.dataset.stock;
+
+      coffeeForm.action = `coffee/${id}/edit`;
+      coffeeNameInput.value = name;
+      coffeeOriginSelect.value = originId;
+      coffeeLocationInput.value = location;
+      coffeeDescInput.value = desc;
+      coffeePriceInput.value = price;
+      coffeeStockInput.value = stock;
+
+      coffeeModal.classList.remove("hidden");
+    });
+  });
+
+  // Close modal btns
+  originCloseModalBtn.addEventListener("click", () => {
+    originModal.classList.add("hidden");
+  })
+
+  coffeeCloseModalBtn.addEventListener("click", () => {
+    coffeeModal.classList.add("hidden");
+  })
+
+
 </script>
 
 <%- include("partials/footer.ejs") %>

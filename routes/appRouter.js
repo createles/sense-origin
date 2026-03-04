@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getCatalog, getCoffeeDetails, getEditCoffeeForm, getManagementDashboard, getNewCoffeeForm, postDeleteCoffee, postDeleteOrigin, postEditCoffee, postNewCoffee } from "../controllers/coffeeController.js";
+import { getCatalog, getCoffeeDetails, getEditCoffeeForm, getManagementDashboard, postDeleteCoffee, postDeleteOrigin, postEditCoffee, postEditOrigin, postNewCoffee, postNewOrigin } from "../controllers/coffeeController.js";
 
 const appRouter = Router();
 
@@ -10,12 +10,14 @@ appRouter.get("/", (req, res) => {
 // View coffee catalog
 appRouter.get("/catalog", getCatalog);
 
-// View coffee item details
+// View coffee item details page
 appRouter.get("/coffee/:id", getCoffeeDetails);
 
-// Create new coffee item routes
-appRouter.get("/coffee-form", getNewCoffeeForm);
-appRouter.post("/coffee-form", postNewCoffee);
+// Create new origin
+appRouter.post("/origin/new", postNewOrigin)
+
+// Create new coffee item
+appRouter.post("/coffee/new", postNewCoffee);
 
 // Edit coffee item routes
 appRouter.get("/coffee/:id/edit", getEditCoffeeForm);
@@ -29,5 +31,10 @@ appRouter.post("/origin/:id/delete", postDeleteOrigin);
 
 // Admin Management Dashboard route
 appRouter.get("/manage", getManagementDashboard);
+
+// Edit origin route
+appRouter.post("/origin/:id/edit", postEditOrigin);
+
+
 
 export default appRouter;

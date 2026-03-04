@@ -59,24 +59,79 @@ export async function getCoffeeDetails(req, res) {
   }
 }
 
-// -- COFFEE-FORM PAGE -- 
+// -- ADMIN DASHBOARD PAGE -- 
 
-// render coffee-form to add new coffee item
-export async function getNewCoffeeForm(req, res) {
+// Load management dashboard
+export async function getManagementDashboard(req, res) {
   try {
-   const origins = await db.getAllOrigins();
-   
-   if (origins.length === 0) {
-    return res.status(404).send("Could not fetch list of origins.");
-   }
+    const origins = await db.getAllOrigins();
+    const coffees = await db.getAllCoffees();
 
-   res.render("coffee-form", {
-    title: "Add New Coffee Item",
-    origins: origins,
-    coffee: {}
-   });
+    const successMsg = req.query.success;
+    const errorMsg = req.query.error;
+
+    res.render("manage", {
+      title: "Inventory Management Dashboard",
+      origins: origins, 
+      coffees: coffees,
+      successMsg,
+      errorMsg 
+    });
   } catch (error) {
-    console.error("Error loading new coffee form.", error);
+    console.error("Access to admin dashboard aborted.", error);
+    res.status(500).send("Internal Server Error");
+  }
+}
+
+export async function postNewOrigin(req, res) {
+  try {
+    const {
+      name,
+      region,
+      desc
+    } = req.body;
+
+    // check mandatory fields
+    if (!name|| !region) {
+      return res.status(400).send("Name, and region are required.");
+    }
+
+    await db.insertOrigin(name, region, desc);
+
+    const msg = encodeURIComponent(`${name} origin added to inventory.`);
+    res.redirect(`/manage?success=${msg}`)
+
+  } catch (error) {
+    console.error("Failed to add origin category.", error);
+
+    const msg = encodeURIComponent("Failed to create origin category. Please try again.");
+    res.redirect(`/manage?error=${msg}`)
+  }
+}
+
+export async function postEditOrigin(req, res) {
+  try {
+    const originId = req.params.id;
+    const {
+      modalOriginName,
+      modalOriginRegion,
+      modalOriginDesc
+    } = req.body;
+
+    if (!modalOriginName || !modalOriginRegion || !originId) {
+      return res.status(400).send("Name and region fields are required.");
+    }
+
+    await db.updateOrigin(
+      originId,
+      modalOriginName,
+      modalOriginRegion,
+      modalOriginDesc
+    );
+
+    res.redirect("/manage");
+  } catch (error) {
+    console.error("Failed to update origin details.", error);
     res.status(500).send("Internal Server Error");
   }
 }
@@ -90,28 +145,12 @@ export async function postNewCoffee(req, res) {
       description,
       price,
       stock,
-      originId,
-      //  for handling new origin creation
-      newOriginName,
-      newOriginRegion,
-      newOriginDescription,
+      originId
     } = req.body;
 
-    // check that mandatory fields not missing before insertion
+    // check mandatory fields
     if (!name || !price || !originId) {
       return res.status(400).send("Name, price, and origin are required.");
-    }
-
-    // temporarily set finalOriginId to originId as fallback
-    let finalOriginId = originId;
-
-    // check if new origin is being created
-    if (originId === "new") {
-      if (!newOriginName) {
-        return res.status(400).send("New origin name field is required.");
-      }
-    // set finalOriginId to new id
-      finalOriginId = await db.insertOrigin(newOriginName, newOriginRegion, newOriginDescription);
     }
 
     await db.insertCoffee(
@@ -120,13 +159,17 @@ export async function postNewCoffee(req, res) {
       description,
       price,
       stock,
-      finalOriginId,
+      originId,
     );
 
-    res.redirect("/catalog");
+    const msg = encodeURIComponent(`${name} has been successfully added to inventory.`)
+    res.redirect(`/manage?success=${msg}`);
+  
   } catch (error) {
-    console.error("Error adding new item into the database.", error);
-    res.status(500).send("Internal Server Error");
+    console.error("Error adding new item to inventory.", error);
+
+    const msg = encodeURIComponent("Failed to add new coffee item. Please try again.")
+    res.redirect(`/manage?error=${msg}`);
   }
 }
 
@@ -238,25 +281,6 @@ export async function postDeleteOrigin(req, res) {
 
   } catch (error) {
     console.error("Failure to delete origin.", error);
-    res.status(500).send("Internal Server Error");
-  }
-}
-
-// -- ADMIN DASHBOARD PAGE -- 
-
-// Load management dashboard
-export async function getManagementDashboard(req, res) {
-  try {
-    const origins = await db.getAllOrigins();
-    const coffees = await db.getAllCoffees();
-
-    res.render("manage", {
-      origins: origins, 
-      coffees: coffees, 
-      title: "Inventory Management Dashboard"
-    });
-  } catch (error) {
-    console.error("Access to admin dashboard aborted.", error);
     res.status(500).send("Internal Server Error");
   }
 }

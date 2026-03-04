@@ -1,3 +1,18 @@
+.alert {
+  padding: 10px; 
+  margin-bottom: 15px;
+}
+
+.success-alert {
+  color: green;
+  border: 1px solid green; 
+}
+
+.error-alert {
+  color: red; 
+  border: 1px solid red; 
+}
+
 .new-origin-input {
   display: none;
 }
@@ -13,4 +28,9 @@
 .action-cell {
   display: flex;
   gap: 10px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
 }
