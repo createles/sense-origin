@@ -93,17 +93,17 @@ export async function postNewOrigin(req, res) {
 
     // check mandatory fields
     if (!name|| !region) {
-      return res.status(400).send("Name, and region are required.");
+      const msg = encodeURIComponent(`[ORIGINS]: Name and region fields are required.`);
+      return res.redirect(`/manage?error=${msg}`)
     }
 
     await db.insertOrigin(name, region, desc);
 
-    const msg = encodeURIComponent(`${name} origin added to inventory.`);
+    const msg = encodeURIComponent(`[ORIGINS]: "${name}" added to origin categories.`);
     res.redirect(`/manage?success=${msg}`)
 
   } catch (error) {
     console.error("Failed to add origin category.", error);
-
     const msg = encodeURIComponent("Failed to create origin category. Please try again.");
     res.redirect(`/manage?error=${msg}`)
   }
@@ -111,152 +111,32 @@ export async function postNewOrigin(req, res) {
 
 export async function postEditOrigin(req, res) {
   try {
-    const originId = req.params.id;
+    const id = req.params.id;
     const {
-      modalOriginName,
-      modalOriginRegion,
-      modalOriginDesc
+      name,
+      region,
+      desc
     } = req.body;
 
-    if (!modalOriginName || !modalOriginRegion || !originId) {
-      return res.status(400).send("Name and region fields are required.");
+    if (!name || !region || !id) {
+      const msg = encodeURIComponent("[ORIGINS]: Name and region fields are required.");
+      return res.redirect(`/manage?error=${msg}`)
     }
 
     await db.updateOrigin(
-      originId,
-      modalOriginName,
-      modalOriginRegion,
-      modalOriginDesc
+      id,
+      name,
+      region,
+      desc
     );
 
-    res.redirect("/manage");
+    const msg = encodeURIComponent(`[ORIGINS]: Successfully updated details for "${name}."`);
+    res.redirect(`/manage?success=${msg}`)
+    
   } catch (error) {
     console.error("Failed to update origin details.", error);
-    res.status(500).send("Internal Server Error");
-  }
-}
-
-// POST new coffee item into database
-export async function postNewCoffee(req, res) {
-  try {
-    const {
-      name,
-      location,
-      description,
-      price,
-      stock,
-      originId
-    } = req.body;
-
-    // check mandatory fields
-    if (!name || !price || !originId) {
-      return res.status(400).send("Name, price, and origin are required.");
-    }
-
-    await db.insertCoffee(
-      name,
-      location,
-      description,
-      price,
-      stock,
-      originId,
-    );
-
-    const msg = encodeURIComponent(`${name} has been successfully added to inventory.`)
-    res.redirect(`/manage?success=${msg}`);
-  
-  } catch (error) {
-    console.error("Error adding new item to inventory.", error);
-
-    const msg = encodeURIComponent("Failed to add new coffee item. Please try again.")
-    res.redirect(`/manage?error=${msg}`);
-  }
-}
-
-// Edit coffee item details
-export async function getEditCoffeeForm(req, res) {
-  try {
-    const origins = await db.getAllOrigins();
-  
-    if (origins.length === 0) {
-      return res.status(404).send("Could not fetch list of origins.");
-    }
-
-    const coffeeId = req.params.id;
-    const coffee = await db.getCoffeeById(coffeeId);
-
-    if (!coffee) {
-      return res.status(404).send("Coffee not found.");
-    }
-
-    res.render("coffee-form", {
-      title: "Edit Coffee Item",
-      origins: origins,
-      coffee: coffee
-    });
-  } catch (error) {
-    console.error("Failure in fetching coffee details.", error);
-    res.status(500).send("Internal Server Error");
-  }
-}
-
-// Update coffee item
-export async function postEditCoffee(req, res) {
-  try {
-    const coffeeId = req.params.id;
-    const {
-      name,
-      location,
-      description,
-      price,
-      stock,
-      originId,
-      newOriginName,
-      newOriginRegion,
-      newOriginDescription,
-    } = req.body;
-
-    if (!name || !price || !originId) {
-      return res.status(400).send("Name, price, and origin are required.");
-    }
-
-    let finalOriginId = originId;
-
-    if (originId === "new") {
-      if (!newOriginName) {
-        return res.status(400).send("New origin name field is required.");
-      }
-      finalOriginId = await db.insertOrigin(newOriginName, newOriginRegion, newOriginDescription);
-    }
-
-    await db.updateCoffee(
-      coffeeId,
-      name,
-      location,
-      description,
-      price,
-      stock,
-      finalOriginId,
-    );
-
-    res.redirect(`/coffee/${coffeeId}`);
-  } catch (error) {
-    console.error("Failure in updating coffee details", error);
-    res.status(500).send("Internal Server Error");
-  }
-}
-
-// Delete coffee item
-export async function postDeleteCoffee(req, res) {
-  try {
-  const coffeeId = req.params.id;
-
-  await db.deleteCoffee(coffeeId);
-
-  res.redirect('/catalog')
-  } catch (error) {
-    console.error("Failure to delete coffee item", error);
-    res.status(500).send("Internal Server Error");
+    const msg = encodeURIComponent("Failed to update origin details. Please try again.");
+    res.redirect(`/manage?error=${msg}`)
   }
 }
 
@@ -276,11 +156,106 @@ export async function postDeleteOrigin(req, res) {
     const originName = origin.name;
     await db.deleteOrigin(originId);
 
-    const msg = encodeURIComponent(`${originName} origin category removed from inventory.`);
-    res.redirect(`/catalog?success=${msg}`);
+    const msg = encodeURIComponent(`[ORIGINS]: Successfully removed ${originName} from origin categories.`);
+    res.redirect(`/manage?success=${msg}`);
 
   } catch (error) {
     console.error("Failure to delete origin.", error);
-    res.status(500).send("Internal Server Error");
+    const msg = encodeURIComponent("[ORIGINS]: Failed to delete origin category. Please try again.")
+    res.redirect(`/manage?error=${msg}`);
+  }
+}
+
+// POST new coffee item into database
+export async function postNewCoffee(req, res) {
+  try {
+    const {
+      name,
+      location,
+      description,
+      price,
+      stock,
+      originId
+    } = req.body;
+
+    // check mandatory fields
+    if (!name || !price || !originId) {
+      const msg = encodeURIComponent("[COFFEES]: Name, price, and origin fields are required.")
+      return res.redirect(`/manage?error=${msg}`);
+    }
+
+    await db.insertCoffee(
+      name,
+      location,
+      description,
+      price,
+      stock,
+      originId,
+    );
+
+    const msg = encodeURIComponent(`[COFFEES]: Successfully added "${name}" to inventory.`)
+    res.redirect(`/manage?success=${msg}`);
+  
+  } catch (error) {
+    console.error("Error adding new item to inventory.", error);
+    const msg = encodeURIComponent("Failed to add new coffee item. Please try again.")
+    res.redirect(`/manage?error=${msg}`);
+  }
+}
+
+// Update coffee item
+export async function postEditCoffee(req, res) {
+  try {
+    const coffeeId = req.params.id;
+    const {
+      name,
+      location,
+      desc,
+      price,
+      stock,
+      originId,
+    } = req.body;
+
+    if (!name || !price || !originId) {
+      const msg = encodeURIComponent("[COFFEES]: Name, price, and origin fields are required.")
+      return res.redirect(`/manage?error=${msg}`);
+    }
+
+    await db.updateCoffee(
+      coffeeId,
+      name,
+      location,
+      desc,
+      price,
+      stock,
+      originId,
+    );
+
+    const msg = encodeURIComponent(`[COFFEES]: Successfully updated details for "${name}."`)
+    res.redirect(`/manage?success=${msg}`);
+  } catch (error) {
+    console.error("Failure in updating coffee details", error);
+    const msg = encodeURIComponent(`[COFFEES]: Failed to update coffee details. Please try again.`)
+    return res.redirect(`/manage?error=${msg}`);
+  }
+}
+
+// Delete coffee item
+export async function postDeleteCoffee(req, res) {
+  try {
+  const coffeeId = req.params.id;
+
+  const coffee = await db.getCoffeeById(coffeeId);
+  const name = coffee.name;
+
+  await db.deleteCoffee(coffeeId);
+
+  const msg = encodeURIComponent(`[COFFEES]: Successfully deleted "${name}" from inventory.`)
+  res.redirect(`/manage?success=${msg}`);
+
+  } catch (error) {
+    console.error("Failure to delete coffee item", error);
+    const msg = encodeURIComponent("[COFFEES]: Failed to delete item from inventory. Please try again.")
+    res.redirect(`/manage?error=${msg}`);
   }
 }
