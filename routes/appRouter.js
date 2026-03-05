@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getCatalog, getCoffeeDetails, getEditCoffeeForm, getManagementDashboard, postDeleteCoffee, postDeleteOrigin, postEditCoffee, postEditOrigin, postNewCoffee, postNewOrigin } from "../controllers/coffeeController.js";
+import { getCatalog, getCoffeeDetails, getManagementDashboard, postDeleteCoffee, postDeleteOrigin, postEditCoffee, postEditOrigin, postNewCoffee, postNewOrigin } from "../controllers/coffeeController.js";
 
 const appRouter = Router();
 
@@ -13,28 +13,18 @@ appRouter.get("/catalog", getCatalog);
 // View coffee item details page
 appRouter.get("/coffee/:id", getCoffeeDetails);
 
-// Create new origin
-appRouter.post("/origin/new", postNewOrigin)
-
-// Create new coffee item
-appRouter.post("/coffee/new", postNewCoffee);
-
-// Edit coffee item routes
-appRouter.get("/coffee/:id/edit", getEditCoffeeForm);
-appRouter.post("/coffee/:id/edit", postEditCoffee);
-
-// Delete coffee item route
-appRouter.post("/coffee/:id/delete", postDeleteCoffee);
-
-// Delete origin route
-appRouter.post("/origin/:id/delete", postDeleteOrigin);
-
 // Admin Management Dashboard route
 appRouter.get("/manage", getManagementDashboard);
 
-// Edit origin route
-appRouter.post("/origin/:id/edit", postEditOrigin);
+// ORIGIN ROUTES
+appRouter.post("/origin/new", postNewOrigin) // Create new origin
+appRouter.post("/origin/:id/edit", postEditOrigin); // Edit origin route
+appRouter.post("/origin/:id/delete", postDeleteOrigin); // Delete origin route
 
+// COFFEE ROUTES
+appRouter.post("/coffee/new", postNewCoffee); // Create new coffee item
+appRouter.post("/coffee/:id/edit", postEditCoffee); // Edit coffee item routes
+appRouter.post("/coffee/:id/delete", postDeleteCoffee); // Delete coffee item route
 
 
 export default appRouter;
