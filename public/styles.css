@@ -1,6 +1,8 @@
 .alert {
   padding: 10px; 
   margin-bottom: 15px;
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
 }
 
 .success-alert {
@@ -11,6 +13,10 @@
 .error-alert {
   color: red; 
   border: 1px solid red; 
+}
+
+.faded-alert {
+  opacity: 0;
 }
 
 .new-origin-input {

@@ -271,6 +271,24 @@
     coffeeModal.classList.add("hidden");
   })
 
+  const statusAlert = document.querySelector(".alert");
+
+  if (statusAlert) {
+    // start fade-out animation after 3 seconds
+    setTimeout(() => {
+      statusAlert.classList.add("faded-alert");
+
+      // after 0.5 seconds, delete from DOM
+      setTimeout(() => {
+        statusAlert.remove();
+      }, 500);
+
+    }, 3000);
+
+    // clean url by grabbing the base url without the ?query
+    const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+    window.history.replaceState({path: cleanUrl }, '', cleanUrl)
+  }
 
 </script>
 
