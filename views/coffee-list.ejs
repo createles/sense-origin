@@ -9,8 +9,8 @@
         <fieldset>
           <legend>By Origin:</legend>
             <% origins.forEach(origin => { %>
-              <label for="">
-                <input type="radio" name="origin" value="<%= origin.id %>"> <%= origin.name %>
+              <label for="'origin-id-' + <%= origin.id %>">
+                <input type="radio" name="origin" value="<%= origin.id %>" id="'origin-id-' + <%= origin.id %>"> <%= origin.name %>
               </label><br>
             <% }) %>
         </fieldset>
