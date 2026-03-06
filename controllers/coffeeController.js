@@ -135,17 +135,20 @@ export async function postNewOrigin(req, res) {
 
 export async function postEditOrigin(req, res) {
   try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      const firstErrorMsg = errors.array()[0].msg;
+      const msg = encodeURIComponent(`[ORIGINS]: ${firstErrorMsg}`);
+      return res.redirect(`/manage?error=${msg}`)
+    }
+
     const id = req.params.id;
     const {
       name,
       region,
       desc
     } = req.body;
-
-    if (!name || !region || !id) {
-      const msg = encodeURIComponent("[ORIGINS]: Name and region fields are required.");
-      return res.redirect(`/manage?error=${msg}`)
-    }
 
     await db.updateOrigin(
       id,
@@ -193,6 +196,14 @@ export async function postDeleteOrigin(req, res) {
 // POST new coffee item into database
 export async function postNewCoffee(req, res) {
   try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      const firstErrorMsg = errors.array()[0].msg;
+      const msg = encodeURIComponent(`[COFFEES]: ${firstErrorMsg}`);
+      return res.redirect(`/manage?error=${msg}`)
+    }
+
     const {
       name,
       location,
@@ -201,12 +212,6 @@ export async function postNewCoffee(req, res) {
       stock,
       originId
     } = req.body;
-
-    // check mandatory fields
-    if (!name || !price || !originId) {
-      const msg = encodeURIComponent("[COFFEES]: Name, price, and origin fields are required.")
-      return res.redirect(`/manage?error=${msg}`);
-    }
 
     await db.insertCoffee(
       name,
@@ -230,6 +235,14 @@ export async function postNewCoffee(req, res) {
 // Update coffee item
 export async function postEditCoffee(req, res) {
   try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      const firstErrorMsg = errors.array()[0].msg;
+      const msg = encodeURIComponent(`[COFFEES]: ${firstErrorMsg}`);
+      return res.redirect(`/manage?error=${msg}`)
+    }
+
     const coffeeId = req.params.id;
     const {
       name,
@@ -239,11 +252,6 @@ export async function postEditCoffee(req, res) {
       stock,
       originId,
     } = req.body;
-
-    if (!name || !price || !originId) {
-      const msg = encodeURIComponent("[COFFEES]: Name, price, and origin fields are required.")
-      return res.redirect(`/manage?error=${msg}`);
-    }
 
     await db.updateCoffee(
       coffeeId,
