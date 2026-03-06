@@ -40,3 +40,13 @@
   display: flex;
   justify-content: space-between;
 }
+
+.logout-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 0; 
+  text-decoration: underline;
+}
