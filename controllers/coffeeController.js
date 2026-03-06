@@ -16,7 +16,7 @@ export const validateCoffee = [
   body("location").trim().escape(),
   body("desc").trim().escape(),
   body("price").notEmpty().withMessage("Price is required.").isFloat().withMessage("Price must be a positive number."),
-  body("stock").optional({checkFalsy: true}).isInt({ min: 0 }).withMessage("Stock must be a positive number")
+  body("stock").optional({checkFalsy: true}).isInt({ min: 0 }).withMessage("Stock must be a positive number.")
 ];
 
 
