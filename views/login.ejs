@@ -1,0 +1,19 @@
+<%- include("partials/header.ejs", { title: title }) %>
+
+<div class="login-container">
+  <h2>Admin Access</h2>
+  
+  <% if (errorMsg) { %>
+    <div class="alert error-alert"><%= errorMsg %></div>
+  <% } %>
+
+  <form action="/login" method="POST">
+    <label>
+      Password:
+      <input type="password" name="password" required>
+    </label>
+    <button type="submit">Login</button>
+  </form>
+</div>
+
+<%- include("partials/footer.ejs") %>
