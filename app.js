@@ -30,6 +30,13 @@ app.use(session({
   cookie: { maxAge: 1000 * 60 * 60 } // cookie expires after 1 hour
 }))
 
+// passes session status to all EJS templates
+app.use((req, res, next) => {
+  // create global "isAdmin" variable accross all EJS views
+  res.locals.isAdmin = req.session.isAdmin || false; 
+  next();
+});
+
 // test route
 app.use("/", appRouter)
 
