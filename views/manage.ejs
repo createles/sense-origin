@@ -105,9 +105,18 @@
 <!-- Origin Modal -->
 <div class="origin-modal hidden">
   <form id="origin-form" method="post">
-    <input type="text" id="modal-origin-name" name="name">
-    <input type="text" id="modal-origin-region" name="region">
-    <textarea id="modal-origin-desc" name="desc"></textarea>
+    <label>
+      Name:
+      <input type="text" id="modal-origin-name" name="name">
+    </label>
+    <label for="">
+      Region:
+      <input type="text" id="modal-origin-region" name="region">
+    </label>
+    <label for="">
+      Description:
+      <textarea id="modal-origin-desc" name="desc"></textarea>
+    </label>
     <button type="button" id="close-origin-modal-btn">Cancel</button>
     <button type="submit">Update</button>
   </form>
@@ -121,7 +130,7 @@
       <input type="text" id="modal-coffee-name" name="name">
     </label>
     <label>
-      Region:
+      Origin:
       <select name="originId" id="modal-selected-origin" required>
         <% origins.forEach(origin=> { %>
           <option value="<%= origin.id %>">
