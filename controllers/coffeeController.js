@@ -1,6 +1,45 @@
 import * as db from "../db/queries.js";
 import { body, validationResult } from "express-validator"; 
 
+// get admin login page
+export function getLogin(req, res) {
+  const errorMsg = req.query.error;
+  res.render("login", {
+    title: "Admin Login",
+    errorMsg
+  });
+}
+
+// handle login via post
+export function postLogin(req, res) {
+  const { password } = req.body;
+
+  if (password === process.env.ADMIN_PASSWORD) {
+    req.session.isAdmin = true;
+    res.redirect("/manage");
+  } else {
+    const msg = encodeURIComponent("Incorrect admin password.");
+    res.redirect(`/login?error=${msg}`);
+  }
+}
+
+// handle logout via post
+export function postLogout(req, res) {
+  req.session.destroy(() => {
+    res.redirect("/")
+  })
+}
+
+export function requireAdmin(req, res, next) {
+  // if user has admin permissions, proceed to next function
+  if (req.session && req.session.isAdmin) {
+    next(); 
+  } else {
+    // If not, go back to login page
+    res.redirect("/login"); 
+  }
+}
+
 // Validation rules
 export const validateOrigin = [
   // remove white spaces and check to ensure value exists
