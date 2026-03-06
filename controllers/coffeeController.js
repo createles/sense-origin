@@ -1,4 +1,25 @@
 import * as db from "../db/queries.js";
+import { body, validationResult } from "express-validator"; 
+
+// Validation rules
+export const validateOrigin = [
+  // remove white spaces and check to ensure value exists
+  // .escape() converts HTML characters to safe equivalents (eg. < > )
+  body("name").trim().notEmpty().withMessage("Origin name is required.").escape(),
+  body("region").trim().notEmpty().withMessage("Region is required.").escape(),
+  body("desc").trim().escape() // Description is optional, so we just sanitize it!
+];
+
+export const validateCoffee = [
+  body("name").trim().notEmpty().withMessage("Name is required.").escape(),
+  body("originId").notEmpty().withMessage("Origin is required.").isInt(),
+  body("location").trim().escape(),
+  body("desc").trim().escape(),
+  body("price").notEmpty().withMessage("Price is required.").isFloat().withMessage("Price must be a positive number."),
+  body("stock").optional({checkFalsy: true}).isInt({ min: 0 }).withMessage("Stock must be a positive number")
+];
+
+
 
 //  -- COFFEE CATALOG PAGE --
 
@@ -85,17 +106,20 @@ export async function getManagementDashboard(req, res) {
 
 export async function postNewOrigin(req, res) {
   try {
+    const errors = validationResult(req);
+
+    // if mandatory values missing, redirect back with error msg
+    if (!errors.isEmpty()) {
+      const firstErrorMsg = errors.array()[0].msg;
+      const msg = encodeURIComponent(`[ORIGINS]: ${firstErrorMsg}`);
+      return res.redirect(`/manage?error=${msg}`)
+    }
+
     const {
       name,
       region,
       desc
     } = req.body;
-
-    // check mandatory fields
-    if (!name|| !region) {
-      const msg = encodeURIComponent(`[ORIGINS]: Name and region fields are required.`);
-      return res.redirect(`/manage?error=${msg}`)
-    }
 
     await db.insertOrigin(name, region, desc);
 
@@ -172,7 +196,7 @@ export async function postNewCoffee(req, res) {
     const {
       name,
       location,
-      description,
+      desc,
       price,
       stock,
       originId
@@ -187,7 +211,7 @@ export async function postNewCoffee(req, res) {
     await db.insertCoffee(
       name,
       location,
-      description,
+      desc,
       price,
       stock,
       originId,
