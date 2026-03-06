@@ -203,6 +203,7 @@
   originsToggle.addEventListener("click", () => {
     originsTable.classList.remove("hidden");
     coffeesTable.classList.add("hidden");
+    coffeeModal.classList.add("hidden");
 
     originsToggle.classList.add("active");
     coffeesToggle.classList.remove("active");
@@ -211,6 +212,7 @@
   coffeesToggle.addEventListener("click", () => {
     coffeesTable.classList.remove("hidden");
     originsTable.classList.add("hidden");
+    originModal.classList.add("hidden");
 
     coffeesToggle.classList.add("active");
     originsToggle.classList.remove("active");
