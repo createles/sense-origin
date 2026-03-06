@@ -1,3 +1,4 @@
+import session from "express-session";
 import "dotenv/config";
 import express, { Router } from "express";
 import path from "node:path";
@@ -20,6 +21,14 @@ app.use(express.urlencoded({ extended: true }));
 
 // serve static assests (stylesheet, ico)
 app.use(express.static(path.join(__dirname, "public")));
+
+// session middleware
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 1000 * 60 * 60 } // cookie expires after 1 hour
+}))
 
 // test route
 app.use("/", appRouter)
