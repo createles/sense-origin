@@ -26,10 +26,18 @@
         <% if (coffees.length > 0) { %>
           <% coffees.forEach(coffee => { %>
             <div class="coffee-card">
-              <h4><%= coffee.name %></h4>
-              <p><strong>Price:</strong> $<%= coffee.price %></p>
-              <p><strong>Stock:</strong> $<%= coffee.stock %></p>
-              <a href="/coffee/<%= coffee.id %>">View Details</a>
+              
+              <!-- to hold product image -->
+              <div class="coffee-image-container">
+              </div>
+
+              <div class="coffee-card-details">
+                <h4><%= coffee.name %></h4>
+                <p><strong>Price:</strong> $<%= coffee.price %></p>
+                <p><strong>Stock:</strong> $<%= coffee.stock %></p>
+                <a href="/coffee/<%= coffee.id %>">View Details</a>
+              </div>
+
             </div>
           <% }) %>
 
