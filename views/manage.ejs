@@ -136,7 +136,7 @@
       <textarea id="modal-origin-desc" name="desc"></textarea>
     </label>
     <button type="button" id="close-origin-modal-btn">Cancel</button>
-    <button type="submit">Update</button>
+    <button type="submit" id="origin-submit">Update</button>
   </form>
 </div>
 
@@ -174,7 +174,7 @@
       <input type="number" name="stock" id="modal-coffee-stock">
     </label>
     <button type="button" id="close-coffee-modal-btn">Cancel</button>
-    <button type="submit">Update</button>
+    <button type="submit" id="coffee-submit">Update</button>
   </form>
 </div>
 
@@ -196,6 +196,8 @@
   const addCoffeeBtn = document.querySelector("#add-coffee-btn");
   const editOriginBtns = document.querySelectorAll(".edit-origin-btn");
   const editCoffeeBtns = document.querySelectorAll(".edit-coffee-btn");
+  const submitOriginBtn = document.querySelector("#origin-submit");
+  const submitCoffeeBtn = document.querySelector("#coffee-submit");
   
   // Select modal forms
   const originForm = document.querySelector("#origin-form"); 
@@ -241,12 +243,14 @@
     originForm.reset();
     originForm.action = "/origin/new";
     originModal.classList.remove("hidden");
+    submitOriginBtn.textContent = "Add";
   });
 
   addCoffeeBtn.addEventListener("click", () => {
     coffeeForm.reset();
     coffeeForm.action = "/coffee/new";
     coffeeModal.classList.remove("hidden");
+    submitCoffeeBtn.textContent = "Add";
   });
 
   // EDIT BUTTON LISTENERS
@@ -266,6 +270,7 @@
 
       // show modal
       originModal.classList.remove("hidden");
+      submitOriginBtn.textContent = "Update";
     });
   });
 
@@ -288,6 +293,7 @@
       coffeeStockInput.value = stock;
 
       coffeeModal.classList.remove("hidden");
+      submitCoffeeBtn.textContent = "Update";
     });
   });
 
