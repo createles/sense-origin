@@ -10,7 +10,16 @@
           <legend>By Origin:</legend>
             <% origins.forEach(origin => { %>
               <label for="'origin-id-' + <%= origin.id %>">
-                <input type="radio" name="origin" value="<%= origin.id %>" id="'origin-id-' + <%= origin.id %>"> <%= origin.name %>
+                <input 
+                  type="checkbox" 
+                  name="origin" 
+                  value="<%= origin.id %>" 
+                  id="'origin-id-' + <%= origin.id %>"
+                  <% if (selectedOrigins && selectedOrigins.includes(origin.id.toString())) { %> 
+                  checked
+                <% } %>
+                >
+                <%= origin.name %>
               </label><br>
             <% }) %>
         </fieldset>

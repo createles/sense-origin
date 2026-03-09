@@ -31,6 +31,17 @@ export async function getCoffeesByOrigin(originId) {
   return rows;
 }
 
+export async function getCoffeesByMultipleOrigins(originIds) {
+  const { rows } = await pool.query(
+    `SELECT coffees.*, origins.name AS origin_name 
+     FROM coffees 
+     JOIN origins ON coffees.origin_id = origins.id 
+     WHERE origin_id = ANY($1::int[])`,
+    [originIds]
+  );
+  return rows;
+}
+
 export async function getCoffeeById(id) {
   const query = `
     SELECT coffees.*, origins.name AS origin_name

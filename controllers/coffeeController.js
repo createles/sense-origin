@@ -70,29 +70,35 @@ export async function getCatalog(req, res) {
     const errorMsg = req.query.error;
     const successMsg = req.query.success;
 
-    // check for any filters applied to GET form
-    const filterId = req.query.origin;
-
+    // used to populate filters sidebar
+    let origins = await db.getAllOrigins();
     let coffees;
     
+    // check for any filters applied to GET form
+    let filterIds = req.query.origin;
+
     // filtered by specific origin
-    if (filterId && filterId !== "all") {
-      coffees = await db.getCoffeesByOrigin(filterId);
+    if (filterIds) {
+      // if filter is a single id, wrap in an array
+      if (!Array.isArray(filterIds)) {
+        filterIds = [filterIds];
+      }
+
+      coffees = await db.getCoffeesByMultipleOrigins(filterIds);
     
-    // or get all coffees 
+      // or get all coffees 
     } else {
       coffees = await db.getAllCoffees();
     }
-
-    // used to populate filters sidebar
-    const origins = await db.getAllOrigins();
 
     res.render("coffee-list", {
       origins: origins, 
       coffees: coffees,
       error: errorMsg,
-      success: successMsg
+      success: successMsg,
+      selectedOrigins: filterIds || [] // pass to ejs view to keep options selected on UI
     });
+
   } catch (error) {
     console.error("Error fetching catalog:", error);
     res.status(500).send("Internal Server Error");
