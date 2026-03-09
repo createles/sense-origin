@@ -43,17 +43,16 @@ export function requireAdmin(req, res, next) {
 // Validation rules
 export const validateOrigin = [
   // remove white spaces and check to ensure value exists
-  // .escape() converts HTML characters to safe equivalents (eg. < > )
-  body("name").trim().notEmpty().withMessage("Origin name is required.").escape(),
-  body("region").trim().notEmpty().withMessage("Region is required.").escape(),
-  body("desc").trim().escape() // Description is optional, so we just sanitize it!
+  body("name").trim().notEmpty().withMessage("Origin name is required."),
+  body("region").trim().notEmpty().withMessage("Region is required."),
+  body("desc").trim() // Description is optional, so we just sanitize it!
 ];
 
 export const validateCoffee = [
-  body("name").trim().notEmpty().withMessage("Name is required.").escape(),
+  body("name").trim().notEmpty().withMessage("Name is required."),
   body("originId").notEmpty().withMessage("Origin is required.").isInt(),
-  body("location").trim().escape(),
-  body("desc").trim().escape(),
+  body("location").trim(),
+  body("desc").trim(),
   body("price").notEmpty().withMessage("Price is required.").isFloat().withMessage("Price must be a positive number."),
   body("stock").optional({checkFalsy: true}).isInt({ min: 0 }).withMessage("Stock must be a positive number.")
 ];
