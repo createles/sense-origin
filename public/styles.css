@@ -217,6 +217,12 @@ nav a:hover, .logout-btn:hover {
   font-size: 0.85rem;
 }
 
+.text-muted {
+  color: #A99E96;
+  font-style: italic;
+  font-size: 0.9em;
+}
+
 
 button, .btn {
   background-color: var(--color-copper);

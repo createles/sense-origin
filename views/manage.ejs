@@ -35,7 +35,13 @@
       <td><%= origin.id %></td>
       <td><%= origin.name %></td>
       <td><%= origin.region %></td>
-      <td><%= origin.description %></td>
+      <td>
+        <% if (origin.description) { %>
+          <%= origin.description %>
+        <% } else { %>
+          <span class="text-muted"> No description </span>
+        <% } %>
+      </td>
       <td class="action-cell">
         <button 
         type="button"
@@ -76,8 +82,20 @@
         <td><%= coffee.id %></td>
         <td><%= coffee.name %></td>
         <td><%= coffee.origin_name %></td>
-        <td><%= coffee.location %></td>
-        <td><%= coffee.description %></td>
+        <td>
+          <% if (coffee.location) { %>
+            <%= coffee.location %>
+              <% } else { %>
+                <span class="text-muted">Not specified</span>
+                <% } %>
+        </td>
+        <td>
+          <% if (coffee.description) { %>
+            <%= coffee.description %>
+              <% } else { %>
+                <span class="text-muted">No description</span>
+                <% } %>
+        </td>
         <td><%= coffee.price %></td>
         <td><%= coffee.stock %></td>
         <td class="action-cell">
