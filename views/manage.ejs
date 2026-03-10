@@ -306,6 +306,14 @@
     coffeeModal.classList.add("hidden");
   })
 
+  originModal.addEventListener("click", (e) => {
+    if (e.target === originModal) originModal.classList.add("hidden");
+  })
+
+  coffeeModal.addEventListener("click", (e) => {
+    if (e.target === coffeeModal) coffeeModal.classList.add("hidden");
+  })
+
   const statusAlert = document.querySelector(".alert");
 
   if (statusAlert) {
