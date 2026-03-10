@@ -70,11 +70,32 @@ export async function getCatalog(req, res) {
     const successMsg = req.query.success;
 
     // used to populate filters sidebar
-    let origins = await db.getAllOrigins();
+    const origins = await db.getAllOrigins();
+    const originsByRegion = origins.reduce((acc, origin) => {
+      if (!acc[origin.region]) {
+        acc[origin.region] = [];
+      }
+
+      acc[origin.region].push(origin);
+      return acc;
+    }, {});
+
     let coffees;
     
     // check for any filters applied to GET form
     let filterIds = req.query.origin;
+    const regionFilter = req.query.region;
+
+    // set region filter if user clicked a region on homepage
+    if (regionFilter) {
+      // Find all origins that match this region (case-insensitive)
+      const matchingOrigins = origins.filter(origin => 
+        origin.region.toLowerCase() === regionFilter.toLowerCase()
+      );
+      
+      // Extract their IDs and hand them to filterIds
+      filterIds = matchingOrigins.map(origin => origin.id.toString());
+    }
 
     // filtered by specific origin
     if (filterIds) {
@@ -91,7 +112,8 @@ export async function getCatalog(req, res) {
     }
 
     res.render("coffee-list", {
-      origins: origins, 
+      origins: origins,
+      originsByRegion: originsByRegion, 
       coffees: coffees,
       error: errorMsg,
       success: successMsg,

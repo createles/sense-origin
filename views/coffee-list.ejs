@@ -6,25 +6,31 @@
       <h3> Filter Coffees </h3>
       <form action="/catalog" method="GET">
 
-        <fieldset>
-          <legend>By Origin:</legend>
-            <% origins.forEach(origin => { %>
-              <label for="'origin-id-' + <%= origin.id %>">
-                <input 
-                  type="checkbox" 
-                  name="origin" 
-                  value="<%= origin.id %>" 
-                  id="'origin-id-' + <%= origin.id %>"
-                  <% if (selectedOrigins && selectedOrigins.includes(origin.id.toString())) { %> 
-                  checked
-                <% } %>
-                >
-                <%= origin.name %>
-              </label><br>
-            <% }) %>
-        </fieldset>
-
-        <button type="submit">Apply Filters</button>
+      <fieldset>
+      <legend>Origins</legend>
+    
+      <!-- Origins grouped by Region -->
+      <% Object.keys(originsByRegion).sort().forEach(region => { %>
+      <div class="region-group">
+        
+        <h5 class="region-title"><%= region %></h5>
+        
+        <% originsByRegion[region].forEach(origin => { %>
+          <label>
+            <input type="checkbox" name="origin" value="<%= origin.id %>" 
+              <% if (locals.selectedOrigins && selectedOrigins.includes(origin.id.toString())) { %> checked <% } %>>
+            <%= origin.name %>
+          </label>
+        <% }) %>
+        
+      </div>
+      <% }) %>
+    
+      </fieldset>
+        <div class="filter-btns">
+          <button type="button" onclick="window.location.href='/catalog'" id="clear-btn">Clear Filters</button>
+          <button type="submit" id="apply-btn">Apply Filters</button>
+        </div>
       </form>
     </aside>
 
