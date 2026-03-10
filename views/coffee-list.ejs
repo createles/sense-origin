@@ -38,14 +38,24 @@
               
               <!-- to hold product image -->
               <div class="coffee-image-container">
+                <%- include('partials/coffee-bag.ejs', { coffee: coffee }) %>
               </div>
 
               <div class="coffee-card-details">
                 <h5><%= coffee.origin_name %></h5>
                 <h4><%= coffee.name %></h4>
                 <p><strong>Price:</strong> $<%= coffee.price %></p>
-                <p><strong>Stock:</strong> $<%= coffee.stock %></p>
-                <a href="/coffee/<%= coffee.id %>">View Details</a>
+                <p><strong>Stock:</strong> <%= coffee.stock %></p>
+
+                <button class="btn view-details-btn"
+                data-name="<%= coffee.name %>"
+                data-origin="<%= coffee.origin_name %>"
+                data-price="<%= coffee.price %>"
+                data-stock="<%= coffee.stock %>"
+                data-location="<%= coffee.location || '' %>"
+                data-desc="<%= coffee.description || '' %>">
+                View Details
+                </button>
               </div>
 
             </div>
@@ -58,4 +68,94 @@
     </main>
   </div>
 
+  <div id="details-modal" class="coffee-modal hidden">
+  <div class="details-modal-content">
+    
+    <button id="close-details-btn" class="close-btn">&times;</button>
+
+    <div class="modal-image-container">
+      <%- include('partials/coffee-bag.ejs', { coffee: { name: 'Loading...', origin_name: 'Loading...' } }) %>
+    </div>
+
+    <div class="modal-info">
+      <h2 id="modal-coffee-name">Coffee Name</h2>
+      <h4 id="modal-coffee-origin" style="color: var(--color-caramel); margin-bottom: 1.5rem;">Origin</h4>
+      
+      <p><strong>Price:</strong> $<span id="modal-coffee-price"></span></p>
+      <p><strong>Stock:</strong> <span id="modal-coffee-stock"></span> bags</p>
+      
+      <div style="margin-top: 1.5rem;">
+        <p><strong>Farm / Location:</strong></p>
+        <p id="modal-coffee-location"></p>
+      </div>
+
+      <div style="margin-top: 1.5rem;">
+        <p><strong>Tasting Notes & Info:</strong></p>
+        <p id="modal-coffee-desc" style="line-height: 1.8;"></p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const viewBtns = document.querySelectorAll('.view-details-btn');
+  const detailsModal = document.getElementById('details-modal');
+  const closeBtn = document.getElementById('close-details-btn');
+
+  // Text Elements
+  const modalName = document.getElementById('modal-coffee-name');
+  const modalOrigin = document.getElementById('modal-coffee-origin');
+  const modalPrice = document.getElementById('modal-coffee-price');
+  const modalStock = document.getElementById('modal-coffee-stock');
+  const modalLoc = document.getElementById('modal-coffee-location');
+  const modalDesc = document.getElementById('modal-coffee-desc');
+  
+  // SVG Elements (Grabbing the last two text tags which hold the origin and name)
+  const svgTextTags = detailsModal.querySelectorAll('text');
+  const svgOriginText = svgTextTags[svgTextTags.length - 2];
+  const svgNameText = svgTextTags[svgTextTags.length - 1];
+
+  viewBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const { name, origin, price, stock, location, desc } = btn.dataset;
+
+      // 1. Populate standard text
+      modalName.textContent = name;
+      modalOrigin.textContent = origin;
+      modalPrice.textContent = price;
+      modalStock.textContent = stock;
+
+      // 2. Handle Fallbacks using the text-muted class we made earlier!
+      if (location) {
+        modalLoc.textContent = location;
+        modalLoc.classList.remove('text-muted');
+      } else {
+        modalLoc.textContent = "— Location not specified —";
+        modalLoc.classList.add('text-muted');
+      }
+
+      if (desc) {
+        modalDesc.textContent = desc;
+        modalDesc.classList.remove('text-muted');
+      } else {
+        modalDesc.textContent = "— No description available —";
+        modalDesc.classList.add('text-muted');
+      }
+
+      // 3. Update the SVG text dynamically and truncate if necessary
+      svgOriginText.textContent = origin.length > 18 ? origin.substring(0, 18) + '...' : origin;
+      svgNameText.textContent = name.length > 18 ? name.substring(0, 18) + '...' : name;
+
+      // 4. Show Modal
+      detailsModal.classList.remove('hidden');
+    });
+  });
+
+  // Close logic
+  closeBtn.addEventListener('click', () => detailsModal.classList.add('hidden'));
+  detailsModal.addEventListener('click', (e) => {
+    if (e.target === detailsModal) detailsModal.classList.add('hidden');
+  });
+</script>
 <%- include('partials/footer.ejs') %>
