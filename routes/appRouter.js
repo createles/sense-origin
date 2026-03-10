@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getCatalog, getCoffeeDetails, getLogin, getManagementDashboard, postDeleteCoffee, postDeleteOrigin, postEditCoffee, postEditOrigin, postLogin, postLogout, postNewCoffee, postNewOrigin, requireAdmin, validateCoffee, validateOrigin } from "../controllers/coffeeController.js";
+import { getCatalog, getLogin, getManagementDashboard, postDeleteCoffee, postDeleteOrigin, postEditCoffee, postEditOrigin, postLogin, postLogout, postNewCoffee, postNewOrigin, requireAdmin, validateCoffee, validateOrigin } from "../controllers/coffeeController.js";
 
 const appRouter = Router();
 
@@ -18,9 +18,6 @@ appRouter.get("/manage", requireAdmin, getManagementDashboard);
 
 // View coffee catalog
 appRouter.get("/catalog", getCatalog);
-
-// View coffee item details page
-appRouter.get("/coffee/:id", getCoffeeDetails);
 
 // ORIGIN ROUTES
 appRouter.post("/origin/new", requireAdmin, validateOrigin, postNewOrigin) // Create new origin

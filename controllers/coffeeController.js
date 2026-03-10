@@ -104,26 +104,6 @@ export async function getCatalog(req, res) {
   }
 }
 
-// render coffee-item page
-export async function getCoffeeDetails(req, res) {
-  try {
-    const coffeeId = req.params.id;
-    const coffee = await db.getCoffeeById(coffeeId);
-
-    if (!coffee) {
-      return res.status(404).send("Coffee not found");
-    }
-
-    res.render("coffee-item", {
-      title: `${coffee.origin_name} - ${coffee.name}`,
-      coffee: coffee
-    });
-  } catch (error) {
-    console.error("Error fetching coffee details.", error);
-    res.status(500).send("Internal Server Error");
-  }
-}
-
 // -- ADMIN DASHBOARD PAGE -- 
 
 // Load management dashboard
