@@ -189,6 +189,10 @@ nav a:hover, .logout-btn:hover {
 .filter-sidebar fieldset {
   border: none;
   margin-bottom: 1.5rem;
+  /* Set max-height to allow for vertical scrolling */
+  max-height: calc(100svh - 16rem); 
+  overflow-y: auto;
+  padding-right: 0.5rem;
 }
 
 .filter-sidebar legend {
@@ -627,4 +631,40 @@ footer {
   .table-toggles {
     flex-direction: column;
   }
+}
+
+/* Scrollbar styles */
+
+/* Firefox */
+* {
+  scrollbar-width: thin; 
+  scrollbar-color: var(--color-caramel) var(--color-cream);
+}
+
+/* WebKit */
+::-webkit-scrollbar {
+  width: 8px; /* Width of the vertical scrollbar */
+  height: 8px; /* Height of the horizontal scrollbar (if any) */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+  border-radius: var(--radius-sm);
+}
+
+/* Thumb */
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-caramel);
+  border-radius: var(--radius-sm);
+}
+
+/* Hover effect for the thumb */
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-copper);
+}
+
+/* Up and down arrows */
+::-webkit-scrollbar-button {
+  display: none;
 }
