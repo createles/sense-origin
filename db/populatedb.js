@@ -4,6 +4,7 @@ import pg from 'pg';
 const { Client } = pg;
 
 const SQL = `
+DROP TABLE IF EXISTS "session";
 DROP TABLE IF EXISTS coffees;
 DROP TABLE IF EXISTS origins;
 
@@ -23,6 +24,15 @@ CREATE TABLE IF NOT EXISTS coffees (
   stock INTEGER DEFAULT 0,
   origin_id INTEGER REFERENCES origins(id) ON DELETE RESTRICT 
 );
+
+CREATE TABLE "session" (
+  "sid" varchar NOT NULL COLLATE "default",
+  "sess" json NOT NULL,
+  "expire" timestamp(6) NOT NULL,
+  CONSTRAINT "session_pkey" PRIMARY KEY ("sid")
+) WITH (OIDS=FALSE);
+
+CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire");
 
 INSERT INTO origins (name, region, description)
 VALUES 
