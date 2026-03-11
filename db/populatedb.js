@@ -54,13 +54,18 @@ VALUES
 async function main() {
   console.log("Seeding database...");
 
-  const client = new Client({
-    host: process.env.PGHOST,
-    user: process.env.PGUSER,
-    database: process.env.PGDATABASE,
-    password: process.env.PGPASSWORD,
-    port: process.env.PGPORT,
-  });
+  // Use DATABASE_URL whenever possible
+  const clientConfig = process.env.DATABASE_URL
+    ? { connectionString: process.env.DATABASE_URL }
+    : { // fallback to hardcoded variables
+        host: process.env.PGHOST,
+        user: process.env.PGUSER,
+        database: process.env.PGDATABASE,
+        password: process.env.PGPASSWORD,
+        port: process.env.PGPORT,
+      };
+
+  const client = new Client(clientConfig);
 
   try {
     await client.connect();
