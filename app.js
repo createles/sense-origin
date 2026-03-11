@@ -1,4 +1,6 @@
 import session from "express-session";
+import connectPgSimple from "connect-pg-simple";
+import pool from "./db/pool.js";
 import "dotenv/config";
 import express, { Router } from "express";
 import path from "node:path";
@@ -6,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import appRouter from "./routes/appRouter.js";
 
 const app = express();
+const pgSession = connectPgSimple(session);
 const PORT = process.env.PORT || 3000;
 
 // ES6 dirname reconstruction
@@ -24,6 +27,10 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // session middleware
 app.use(session({
+  store: new pgSession({
+    pool: pool, // Use database pool
+    tableName: 'session' // Use session table to store cookies
+  }),
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
