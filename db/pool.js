@@ -19,4 +19,11 @@ const poolConfig = process.env.DATABASE_URL
       port: process.env.PGPORT,
     };
 
-export default new Pool(poolConfig);
+const pool = new Pool(poolConfig);
+
+// Return error message on idle client errors to resolve hiccups
+pool.on("error", (err, client) => {
+  console.error("Unexpected error on idle database client:", err);
+});
+
+export default pool;
