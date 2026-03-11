@@ -524,3 +524,107 @@ footer {
   color: var(--color-mocha);
   font-size: 0.9rem;
 }
+
+/* Media Queries and Responsive Sizing */
+
+/* Large Desktops */
+@media (min-width: 1400px) {
+  main {
+    max-width: 1800px;
+  }
+}
+
+/* Tablet/Smaller Desktop */
+@media (max-width: 900px) {
+  /* Stack the sidebar on top of the coffee catalog */
+  .catalog-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  /* Remove sticky behavior on mobile so it scrolls naturally */
+  .filter-sidebar {
+    position: relative;
+    top: 0;
+  }
+  
+  /* Display sidebar checkboxes in a flexible row rather than a tall column */
+  .region-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+  }
+  
+  .region-title {
+    width: 100%;
+    margin-bottom: 0;
+  }
+}
+
+/* Mobile Devices */
+@media (max-width: 768px) {
+  /* Stack header navigation */
+  nav {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0;
+  }
+
+  /* Stack modal columns */
+  .details-modal-content {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+    gap: 1.5rem;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  /* Center coffee bag graphic */
+  .modal-image-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Shrink the coffee bag graphic slightly for mobile modals */
+  .modal-image-container svg {
+    max-height: 250px;
+  }
+
+  /* Make inventory tables horizontally scrollable instead of breaking the page */
+  .inventory-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* Shrink headings for small screens */
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.3rem; }
+}
+
+/* Tiny Screens */
+@media (max-width: 480px) {
+  main {
+    padding: 1rem 5%;
+  }
+
+  .filter-btns {
+    flex-direction: column;
+  }
+  
+  .filter-btns button, .filter-btns a {
+    width: 100%;
+  }
+  
+  .table-toggles {
+    flex-direction: column;
+  }
+}
