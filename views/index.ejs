@@ -1,20 +1,53 @@
 <%- include('partials/header', { title: 'Sense Coffee - Home' }) %>
 
-  <section class="hero">
-    <h2> Sense Coffee - Your one stop shop for key origins. </h2>
-    <p> Select a category to view our currently available beans: </p>
+<main style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 1rem;">
+  
+  <section class="hero" style="margin-top: 1rem;">
+    <h2 style="margin-bottom: 0.5rem;">The Origin of Flavor</h2>
+    <p style="color: var(--color-mocha); max-width: 700px; margin: 0 auto 1rem auto; font-size: 0.95rem;">
+      All of our beans are sourced from the <strong>Coffee Bean Belt</strong>—the tropical region between the Tropic of Cancer and the Tropic of Capricorn. Select a region below to explore our offerings.
+    </p>
+    <a href="/catalog" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Browse All Coffees</a>
   </section>
 
-  <div class="region-buttons" style="display: flex; gap: 1rem; margin-top: 2rem;">
-  
-  <a href="/catalog" class="btn">Browse All Coffees</a>
-  
-  <a href="/catalog?region=Africa" class="btn" style="background-color: var(--color-mocha);">Africa</a>
-  
-  <a href="/catalog?region=Asia%20%26%20The%20Pacific" class="btn" style="background-color: var(--color-mocha);">Asia & The Pacific</a>
-  
-  <a href="/catalog?region=Latin%20America" class="btn" style="background-color: var(--color-mocha);">Latin America</a>
+  <div class="map-container">
+    <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg">
+      
+      <rect x="0" y="250" width="1200" height="200" fill="var(--color-latte)" opacity="0.3" />
+      <line x1="0" y1="250" x2="1200" y2="250" stroke="var(--color-caramel)" stroke-width="2" stroke-dasharray="8,8" />
+      <line x1="0" y1="450" x2="1200" y2="450" stroke="var(--color-caramel)" stroke-width="2" stroke-dasharray="8,8" />
+      <text x="20" y="240" font-family="var(--font-body)" font-size="12" fill="var(--color-mocha)" letter-spacing="2" text-transform="uppercase">Tropic of Cancer</text>
+      <text x="20" y="470" font-family="var(--font-body)" font-size="12" fill="var(--color-mocha)" letter-spacing="2" text-transform="uppercase">Tropic of Capricorn</text>
 
+      <a href="/catalog?region=Latin%20America">
+        <g class="map-region">
+          <path d="M 200 100 Q 250 150 220 250 T 300 350 Q 320 450 280 500 Q 250 550 240 500 Q 230 400 180 300 Q 150 200 200 100 Z" />
+          <text x="150" y="320" class="region-title">Americas</text>
+          <text x="150" y="345" class="region-profile">Mild & Balanced</text>
+          <text x="150" y="365" class="region-profile">Nutty, Spicy</text>
+        </g>
+      </a>
+
+      <a href="/catalog?region=Africa">
+        <g class="map-region">
+          <path d="M 550 150 Q 650 150 700 250 Q 750 350 650 450 Q 600 500 550 400 Q 500 300 480 250 Q 450 150 550 150 Z" />
+          <text x="500" y="350" class="region-title">Africa</text>
+          <text x="500" y="375" class="region-profile">Bright & Acidic</text>
+          <text x="500" y="395" class="region-profile">Fruity</text>
+        </g>
+      </a>
+
+      <a href="/catalog?region=Asia%20%26%20The%20Pacific">
+        <g class="map-region">
+          <path d="M 850 100 Q 1000 150 1100 250 Q 1050 300 950 280 Q 900 350 950 400 Q 1000 450 1100 450 Q 1050 550 900 500 Q 800 400 800 250 Z" />
+          <text x="900" y="320" class="region-title">Asia & Pacific</text>
+          <text x="900" y="345" class="region-profile">Earthy & Sweet</text>
+          <text x="900" y="365" class="region-profile">Heavy Bodied</text>
+        </g>
+      </a>
+
+    </svg>
   </div>
+</main>
 
 <%- include('partials/footer.ejs') %>

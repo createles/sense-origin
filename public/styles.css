@@ -106,6 +106,68 @@ nav a:hover, .logout-btn:hover {
   color: var(--color-caramel);
 }
 
+/* Interactive region map */
+.map-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 1rem auto 2rem auto;
+  padding: 1rem;
+  background-color: var(--color-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  
+  /* Set max height to not overpower screen */
+  max-height: 55vh; 
+  display: flex;
+  justify-content: center;
+}
+
+.map-container svg {
+  width: 100%;
+  height: 100%;
+}
+
+.map-region {
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+/* Dim the map slightly by default */
+.map-region path {
+  fill: var(--color-latte);
+  transition: var(--transition);
+}
+
+.map-region text {
+  transition: var(--transition);
+  opacity: 0.8;
+}
+
+/* Hover effects */
+.map-region:hover path {
+  fill: var(--color-copper);
+  filter: drop-shadow(0 4px 8px rgba(166, 78, 27, 0.3));
+}
+
+.map-region:hover text {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.region-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 24px;
+  fill: var(--color-espresso);
+}
+
+.region-profile {
+  font-family: var(--font-body);
+  font-size: 14px;
+  fill: var(--color-mocha);
+  font-style: italic;
+}
 
 .catalog-layout {
   display: grid;
